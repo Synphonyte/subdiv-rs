@@ -5,6 +5,10 @@ use std::f32::consts::TAU;
 use std::rc::Rc;
 
 pub fn subdivide_once(model: Model) -> Model {
+    crate::vertex::reset_id();
+    crate::edge::reset_id();
+    crate::triangle::reset_id();
+
     let mut edge_points = HashMap::new();
 
     // TODO: parallelize

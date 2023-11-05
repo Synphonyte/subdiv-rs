@@ -1,15 +1,15 @@
+mod debug;
 mod edge;
 mod model;
 mod subdiv_surface;
 mod triangle;
 mod vertex;
-mod debug;
 
-pub use edge::*;
+pub use edge::Edge;
 pub use model::*;
 pub use subdiv_surface::*;
-pub use triangle::*;
-pub use vertex::*;
+pub use triangle::Triangle;
+pub use vertex::Vertex;
 
 macro_rules! def_next_id {
     () => {
@@ -19,6 +19,10 @@ macro_rules! def_next_id {
 
         fn next_id() -> usize {
             NEXT_ID.fetch_add(1, Ordering::SeqCst)
+        }
+
+        pub fn reset_id() {
+            NEXT_ID.store(0, Ordering::SeqCst);
         }
     };
 }
@@ -44,11 +48,9 @@ macro_rules! impl_eq_hash {
 macro_rules! impl_weak_getter {
     ($name:ident, $ty:ty) => {
         pub fn $name(&self) -> Rc<RefCell<$ty>> {
-            self
-                .$name
+            self.$name
                 .upgrade()
                 .expect(&format!("{} is gone", stringify!($name)))
-
         }
     };
 }
